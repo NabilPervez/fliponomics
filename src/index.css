@@ -662,3 +662,483 @@ body::before {
   color: #FFD700;
   border: 1px solid rgba(255, 215, 0, 0.3);
 }
+
+/* MOBILE BREAKPOINTS */
+
+/* Tablet and below */
+@media (max-width: 768px) {
+  .header {
+    padding: 0.75rem 1rem;
+  }
+
+  .header-content {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .title-group {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  .tagline {
+    font-size: 0.65rem;
+  }
+
+  .ledger {
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .stat-label {
+    font-size: 0.6rem;
+  }
+
+  .stat-value {
+    font-size: 1rem;
+  }
+
+  .main-content {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .coin-mat {
+    padding: 1rem;
+    min-height: 400px;
+  }
+
+  .coin-grid {
+    gap: 1rem;
+  }
+
+  .coin-slot {
+    max-width: 120px;
+  }
+
+  .coin-button {
+    font-size: 1.2rem;
+  }
+
+  .coin-label {
+    font-size: 0.65rem;
+  }
+
+  .shop {
+    padding: 1rem;
+    max-height: none;
+  }
+
+  .shop-tabs {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .tab-button {
+    font-size: 0.7rem;
+    padding: 0.6rem 0.4rem;
+  }
+
+  .shop-item {
+    padding: 0.75rem;
+  }
+
+  .item-name {
+    font-size: 0.85rem;
+  }
+
+  .item-cost {
+    font-size: 0.8rem;
+  }
+
+  .item-description {
+    font-size: 0.75rem;
+  }
+
+  .notification-container {
+    top: 60px;
+    right: 10px;
+    left: 10px;
+  }
+
+  .notification {
+    min-width: auto;
+    padding: 0.75rem 1rem;
+  }
+
+  .notification-title {
+    font-size: 0.9rem;
+  }
+
+  .notification-message {
+    font-size: 0.75rem;
+  }
+
+  .hotkey-hint {
+    display: none;
+  }
+}
+
+/* Mobile Portrait */
+@media (max-width: 480px) and (orientation: portrait) {
+  .header {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .title {
+    font-size: 1rem;
+  }
+
+  .tagline {
+    font-size: 0.6rem;
+  }
+
+  .ledger {
+    gap: 0.75rem;
+  }
+
+  .stat-label {
+    font-size: 0.55rem;
+  }
+
+  .stat-value {
+    font-size: 0.9rem;
+  }
+
+  .main-content {
+    padding: 0.75rem;
+    gap: 0.75rem;
+  }
+
+  .coin-mat {
+    padding: 0.75rem;
+    min-height: 300px;
+  }
+
+  .coin-grid {
+    gap: 0.75rem;
+  }
+
+  .coin-slot {
+    max-width: 90px;
+  }
+
+  .coin-button {
+    font-size: 1rem;
+  }
+
+  .coin-label {
+    font-size: 0.6rem;
+    margin-top: 0.25rem;
+  }
+
+  /* Adjust grid layouts for smaller screens */
+  .coin-grid.slots-5,
+  .coin-grid.slots-6,
+  .coin-grid.slots-7,
+  .coin-grid.slots-8 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .coin-grid.slots-9,
+  .coin-grid.slots-10,
+  .coin-grid.slots-11,
+  .coin-grid.slots-12,
+  .coin-grid.slots-13,
+  .coin-grid.slots-14,
+  .coin-grid.slots-15,
+  .coin-grid.slots-16 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .coin-grid.slots-17,
+  .coin-grid.slots-18,
+  .coin-grid.slots-19,
+  .coin-grid.slots-20,
+  .coin-grid.slots-21,
+  .coin-grid.slots-22,
+  .coin-grid.slots-23,
+  .coin-grid.slots-24,
+  .coin-grid.slots-25,
+  .coin-grid.slots-26,
+  .coin-grid.slots-27,
+  .coin-grid.slots-28,
+  .coin-grid.slots-29,
+  .coin-grid.slots-30,
+  .coin-grid.slots-31,
+  .coin-grid.slots-32 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .shop {
+    padding: 0.75rem;
+  }
+
+  .shop-tabs {
+    padding: 0.4rem;
+    gap: 0.4rem;
+  }
+
+  .tab-button {
+    font-size: 0.65rem;
+    padding: 0.5rem 0.3rem;
+  }
+
+  .shop-items {
+    gap: 0.6rem;
+  }
+
+  .shop-item {
+    padding: 0.6rem;
+  }
+
+  .item-name {
+    font-size: 0.8rem;
+  }
+
+  .item-cost {
+    font-size: 0.75rem;
+  }
+
+  .item-description {
+    font-size: 0.7rem;
+  }
+
+  .item-owned-badge {
+    font-size: 0.6rem;
+    padding: 0.2rem 0.4rem;
+  }
+
+  .float-number {
+    font-size: 1.2rem;
+  }
+
+  .float-number.critical {
+    font-size: 1.5rem;
+  }
+
+  .notification {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .notification-title {
+    font-size: 0.85rem;
+  }
+
+  .notification-message {
+    font-size: 0.7rem;
+  }
+}
+
+/* Mobile Landscape */
+@media (max-width: 926px) and (orientation: landscape) {
+  .header {
+    padding: 0.5rem 1rem;
+  }
+
+  .header-content {
+    grid-template-columns: auto 1fr auto;
+    gap: 1.5rem;
+  }
+
+  .title-group {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  .title {
+    font-size: 1.1rem;
+  }
+
+  .tagline {
+    font-size: 0.6rem;
+  }
+
+  .ledger {
+    gap: 1rem;
+  }
+
+  .stat-label {
+    font-size: 0.55rem;
+  }
+
+  .stat-value {
+    font-size: 0.95rem;
+  }
+
+  .main-content {
+    grid-template-columns: 1fr 350px;
+    padding: 0.75rem;
+    gap: 0.75rem;
+  }
+
+  .coin-mat {
+    padding: 1rem;
+    min-height: 250px;
+  }
+
+  .coin-grid {
+    gap: 0.75rem;
+  }
+
+  .coin-slot {
+    max-width: 80px;
+  }
+
+  .coin-button {
+    font-size: 0.9rem;
+  }
+
+  .coin-label {
+    font-size: 0.55rem;
+    margin-top: 0.25rem;
+  }
+
+  /* Optimize grid for landscape */
+  .coin-grid.slots-3,
+  .coin-grid.slots-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .coin-grid.slots-5,
+  .coin-grid.slots-6,
+  .coin-grid.slots-7,
+  .coin-grid.slots-8 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .coin-grid.slots-9,
+  .coin-grid.slots-10,
+  .coin-grid.slots-11,
+  .coin-grid.slots-12,
+  .coin-grid.slots-13,
+  .coin-grid.slots-14,
+  .coin-grid.slots-15,
+  .coin-grid.slots-16 {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .coin-grid.slots-17,
+  .coin-grid.slots-18,
+  .coin-grid.slots-19,
+  .coin-grid.slots-20,
+  .coin-grid.slots-21,
+  .coin-grid.slots-22,
+  .coin-grid.slots-23,
+  .coin-grid.slots-24,
+  .coin-grid.slots-25,
+  .coin-grid.slots-26,
+  .coin-grid.slots-27,
+  .coin-grid.slots-28,
+  .coin-grid.slots-29,
+  .coin-grid.slots-30,
+  .coin-grid.slots-31,
+  .coin-grid.slots-32 {
+    grid-template-columns: repeat(8, 1fr);
+  }
+
+  .shop {
+    padding: 0.75rem;
+    max-height: calc(100vh - 80px);
+  }
+
+  .shop-tabs {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0.4rem;
+  }
+
+  .tab-button {
+    font-size: 0.65rem;
+    padding: 0.5rem 0.3rem;
+  }
+
+  .shop-items {
+    gap: 0.5rem;
+  }
+
+  .shop-item {
+    padding: 0.6rem;
+  }
+
+  .item-name {
+    font-size: 0.8rem;
+  }
+
+  .item-cost {
+    font-size: 0.75rem;
+  }
+
+  .item-description {
+    font-size: 0.7rem;
+    line-height: 1.3;
+  }
+
+  .item-owned-badge {
+    font-size: 0.6rem;
+    padding: 0.2rem 0.4rem;
+  }
+
+  .float-number {
+    font-size: 1.2rem;
+  }
+
+  .float-number.critical {
+    font-size: 1.5rem;
+  }
+
+  .notification-container {
+    top: 50px;
+  }
+
+  .notification {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .notification-title {
+    font-size: 0.85rem;
+  }
+
+  .notification-message {
+    font-size: 0.7rem;
+  }
+}
+
+/* Very small mobile devices */
+@media (max-width: 360px) {
+  .coin-slot {
+    max-width: 70px;
+  }
+
+  .coin-button {
+    font-size: 0.85rem;
+  }
+
+  .coin-grid.slots-5,
+  .coin-grid.slots-6,
+  .coin-grid.slots-7,
+  .coin-grid.slots-8,
+  .coin-grid.slots-9,
+  .coin-grid.slots-10,
+  .coin-grid.slots-11,
+  .coin-grid.slots-12,
+  .coin-grid.slots-13,
+  .coin-grid.slots-14,
+  .coin-grid.slots-15,
+  .coin-grid.slots-16 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .shop-tabs {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .tab-button {
+    font-size: 0.6rem;
+  }
+}
