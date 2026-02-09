@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flip-O-Nomics: The Infinite Mint</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Righteous&family=Racing+Sans+One&family=Orbitron:wght@400;700;900&display=swap"
+    rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --gold: #FFD700;
+      --gold-dark: #B8860B;
+      --green-felt: #0B5D1E;
+      --green-dark: #063A13;
+      --neon-blue: #00F0FF;
+      --neon-pink: #FF006E;
+      --casino-red: #C41E3A;
+      --silver: #C0C0C0;
+      --bronze: #CD7F32;
+    }
+
+    body {
+      font-family: 'Orbitron', monospace;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%);
+      background-attachment: fixed;
+      color: white;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image:
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.01) 0px, transparent 1px, transparent 80px),
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.01) 0px, transparent 1px, transparent 80px);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    #root {
+      position: relative;
+      z-index: 2;
+    }
+
+    .app-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* HEADER */
+    .header {
+      background: rgba(0, 0, 0, 0.95);
+      padding: 1rem 2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(20px);
+    }
+
+    .header-content {
+      max-width: 1800px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 3rem;
+    }
+
+    .title-group {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+    }
+
+    .title {
+      font-family: 'Racing Sans One', cursive;
+      font-size: 1.5rem;
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 1px;
+      margin: 0;
+    }
+
+    .tagline {
+      font-family: 'Orbitron', monospace;
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .ledger {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex: 1;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
+      opacity: 0.5;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.25rem;
+      font-weight: 400;
+    }
+
+    .stat-value {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #FFD700;
+      font-family: 'Orbitron', monospace;
+    }
+
+    /* MAIN CONTENT */
+    .main-content {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 450px;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      max-width: 1800px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    @media (max-width: 1024px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* COIN MAT */
+    .coin-mat {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 16px;
+      padding: 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+      min-height: 500px;
+    }
+
+    .coin-grid {
+      display: grid;
+      gap: 1.5rem;
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      align-items: center;
+      justify-items: center;
+    }
+
+    .coin-grid.slots-1 {
+      grid-template-columns: 1fr;
+    }
+
+    .coin-grid.slots-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .coin-grid.slots-3,
+    .coin-grid.slots-4 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .coin-grid.slots-5,
+    .coin-grid.slots-6,
+    .coin-grid.slots-7,
+    .coin-grid.slots-8 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .coin-grid.slots-9,
+    .coin-grid.slots-10,
+    .coin-grid.slots-11,
+    .coin-grid.slots-12,
+    .coin-grid.slots-13,
+    .coin-grid.slots-14,
+    .coin-grid.slots-15,
+    .coin-grid.slots-16 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .coin-grid.slots-17,
+    .coin-grid.slots-18,
+    .coin-grid.slots-19,
+    .coin-grid.slots-20,
+    .coin-grid.slots-21,
+    .coin-grid.slots-22,
+    .coin-grid.slots-23,
+    .coin-grid.slots-24,
+    .coin-grid.slots-25,
+    .coin-grid.slots-26,
+    .coin-grid.slots-27,
+    .coin-grid.slots-28,
+    .coin-grid.slots-29,
+    .coin-grid.slots-30,
+    .coin-grid.slots-31,
+    .coin-grid.slots-32 {
+      grid-template-columns: repeat(8, 1fr);
+    }
+
+    .coin-slot {
+      position: relative;
+      width: 100%;
+      max-width: 180px;
+      aspect-ratio: 1;
+    }
+
+    .coin-button {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.1s, filter 0.2s;
+      font-family: 'Righteous', cursive;
+      font-size: 1.5rem;
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.4),
+        inset 0 2px 5px rgba(255, 255, 255, 0.3),
+        inset 0 -2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .coin-button:hover {
+      transform: scale(1.05);
+      filter: brightness(1.1);
+    }
+
+    .coin-button:active {
+      transform: scale(0.95);
+    }
+
+    .coin-button.flipping {
+      animation: coinFlip 0.6s ease-in-out;
+      pointer-events: none;
+    }
+
+    @keyframes coinFlip {
+      0% {
+        transform: rotateY(0deg);
+      }
+
+      50% {
+        transform: rotateY(900deg);
+      }
+
+      100% {
+        transform: rotateY(1800deg);
+      }
+    }
+
+    .coin-penny {
+      background: linear-gradient(135deg, #D4A574 0%, #8B5A2B 50%, #D4A574 100%);
+    }
+
+    .coin-nickel {
+      background: linear-gradient(135deg, #E8E8E8 0%, #A8A8A8 50%, #E8E8E8 100%);
+    }
+
+    .coin-dime {
+      background: linear-gradient(135deg, #F0F0F0 0%, #C0C0C0 50%, #F0F0F0 100%);
+    }
+
+    .coin-quarter {
+      background: linear-gradient(135deg, #FAFAFA 0%, #D0D0D0 50%, #FAFAFA 100%);
+    }
+
+    .coin-loonie {
+      background: linear-gradient(135deg, #FFE5B4 0%, #DAA520 50%, #FFE5B4 100%);
+    }
+
+    .coin-chip {
+      background: linear-gradient(135deg, #C41E3A 0%, #8B0000 50%, #C41E3A 100%);
+      color: white;
+    }
+
+    .coin-doubloon {
+      background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FFD700 100%);
+    }
+
+    .coin-bitcoin {
+      background: linear-gradient(135deg, #F7931A 0%, #FF6B35 50%, #F7931A 100%);
+    }
+
+    .coin-label {
+      font-size: 0.7rem;
+      text-align: center;
+      margin-top: 0.5rem;
+      color: var(--gold);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .empty-slot {
+      width: 100%;
+      height: 100%;
+      border: 2px dashed rgba(255, 215, 0, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 215, 0, 0.3);
+      font-size: 0.8rem;
+      text-align: center;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .empty-slot:hover {
+      border-color: rgba(255, 215, 0, 0.5);
+      background: rgba(255, 215, 0, 0.05);
+    }
+
+    .empty-slot.locked {
+      border-color: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.2);
+      cursor: not-allowed;
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    .coin-button.selecting {
+      cursor: pointer;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    .coin-selector-hint {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.9);
+      color: #FFD700;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* FLOATING NUMBERS */
+    .float-number {
+      position: absolute;
+      font-weight: 900;
+      font-size: 1.5rem;
+      pointer-events: none;
+      animation: floatUp 1s ease-out forwards;
+      z-index: 1000;
+      font-family: 'Orbitron', monospace;
+      text-shadow: 0 0 10px currentColor;
+    }
+
+    .float-number.heads {
+      color: var(--gold);
+    }
+
+    .float-number.tails {
+      color: #888;
+    }
+
+    .float-number.critical {
+      color: var(--neon-pink);
+      font-size: 2rem;
+      animation: floatUpBig 1.5s ease-out forwards;
+    }
+
+    @keyframes floatUp {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(-100px) scale(1.2);
+      }
+    }
+
+    @keyframes floatUpBig {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotate(0deg);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(-120px) scale(1.5) rotate(15deg);
+      }
+    }
+
+    /* SHOP */
+    .shop {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 16px;
+      padding: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      overflow-y: auto;
+      max-height: calc(100vh - 120px);
+    }
+
+    .shop-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 0.5rem;
+      border-radius: 12px;
+    }
+
+    .tab-button {
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.5);
+      padding: 0.75rem 0.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .tab-button:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .tab-button.active {
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      color: #000;
+      font-weight: 700;
+    }
+
+    .shop-items {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .shop-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .shop-item:hover {
+      border-color: rgba(255, 215, 0, 0.5);
+      background: rgba(255, 255, 255, 0.05);
+      transform: translateX(4px);
+    }
+
+    .shop-item.disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .shop-item.disabled:hover {
+      transform: none;
+      border-color: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .shop-item.owned {
+      border-color: rgba(0, 240, 255, 0.3);
+      background: rgba(0, 240, 255, 0.05);
+    }
+
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .item-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .item-cost {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: rgba(255, 215, 0, 0.8);
+    }
+
+    .item-cost.affordable {
+      color: #00FF88;
+    }
+
+    .item-cost.unaffordable {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .item-description {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.6);
+      line-height: 1.5;
+    }
+
+    .item-owned-badge {
+      display: inline-block;
+      background: rgba(0, 240, 255, 0.2);
+      color: #00F0FF;
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      padding: 0.25rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* CONFETTI */
+    .confetti {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    @keyframes confettiFall {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    /* SCROLLBAR */
+    .shop::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .shop::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 3px;
+    }
+
+    .shop::-webkit-scrollbar-thumb {
+      background: rgba(255, 215, 0, 0.3);
+      border-radius: 3px;
+    }
+
+    .shop::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 215, 0, 0.5);
+    }
+
+    /* NOTIFICATIONS */
+    .notification-container {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      pointer-events: none;
+    }
+
+    .notification {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.95), rgba(255, 165, 0, 0.95));
+      color: #000;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4);
+      min-width: 250px;
+      animation: slideInRight 0.3s ease-out;
+      border: 2px solid rgba(255, 215, 0, 0.5);
+    }
+
+    .notification-title {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .notification-message {
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+
+    @keyframes slideInRight {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    /* HOTKEY HINT */
+    .hotkey-hint {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: rgba(255, 255, 255, 0.6);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 50;
+    }
+
+    .hotkey-hint kbd {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-family: 'Orbitron', monospace;
+      font-weight: 700;
+      color: #FFD700;
+      border: 1px solid rgba(255, 215, 0, 0.3);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useCallback } = React;
+
+    // COIN DEFINITIONS
+    const COINS = {
+      penny: { name: 'Penny', value: 0.01, cost: 0, symbol: '1¢', flavor: 'Find a penny, pick it up.' },
+      nickel: { name: 'Nickel', value: 0.05, cost: 1, symbol: '5¢', flavor: 'Five times the copper. Sort of.' },
+      dime: { name: 'Dime', value: 0.10, cost: 5, symbol: '10¢', flavor: 'Smaller, yet more valuable. Economics is weird.' },
+      quarter: { name: 'Quarter', value: 0.25, cost: 20, symbol: '25¢', flavor: 'The laundry machine standard.' },
+      loonie: { name: 'Loonie', value: 1.00, cost: 100, symbol: '$1', flavor: 'A golden bird from the north.' },
+      chip: { name: 'Casino Chip', value: 5.00, cost: 500, symbol: '$5', flavor: 'The house always wins. Now you are the house.' },
+      doubloon: { name: 'Gold Doubloon', value: 50.00, cost: 5000, symbol: '$50', flavor: 'Yarr! Genuine pirate treasure.' },
+      bitcoin: { name: 'Bitcoin', value: 35000, cost: 1000000, symbol: '₿', flavor: 'Volatile, but digital.' }
+    };
+
+    // SPACE UPGRADES
+    const SPACE_UPGRADES = [
+      { id: 'space1', name: 'Mousepad', slots: 2, cost: 3, description: 'Double the friction, double the fun.' },
+      { id: 'space2', name: 'Cafeteria Tray', slots: 4, cost: 30, description: 'Smells like old french fries, fits 4 coins.' },
+      { id: 'space3', name: 'Card Table', slots: 8, cost: 250, description: 'Felt surface for professional action.' },
+      { id: 'space4', name: 'Craps Table', slots: 16, cost: 3000, description: 'High stakes require high surface area.' },
+      { id: 'space5', name: 'Server Rack', slots: 32, cost: 100000, description: 'Digitized flipping slots. High density.' }
+    ];
+
+    // AUTOMATION TOOLS
+    const TOOLS = [
+      { id: 'tool1', name: 'Fidget Finger', description: 'Flips Slot #1 every 5s', interval: 5000, cost: 10, flavor: 'Good for early game.', target: 'slot0' },
+      { id: 'tool2', name: 'Drinking Bird', description: 'Flips Random Slot every 2s', interval: 2000, cost: 50, flavor: 'It bobs for water, hits a coin.', target: 'random' },
+      { id: 'tool3', name: "Dealer's Hand", description: 'Flips Row #1 every 3s', interval: 3000, cost: 200, flavor: 'Efficient for Card Tables.', target: 'row1' },
+      { id: 'tool4', name: 'Industrial Fan', description: 'Flips ALL slots every 4s', interval: 4000, cost: 1000, flavor: 'Brute force wind power.', target: 'all' },
+      { id: 'tool5', name: 'Mechanical Arm', description: 'Flips ALL slots every 2s', interval: 2000, cost: 5000, flavor: 'Precision robotics.', target: 'all' },
+      { id: 'tool6', name: 'Tesla Coil', description: 'Flips ALL slots every 1s', interval: 1000, cost: 20000, flavor: 'Electromagnetic acceleration.', target: 'all' },
+      { id: 'tool7', name: 'Time Dilator', description: 'Flips ALL slots 5/s', interval: 200, cost: 50000, flavor: 'Bends time locally.', target: 'all' },
+      { id: 'tool8', name: 'Quantum Tunneler', description: 'Flips ALL slots 10/s', interval: 100, cost: 100000, flavor: 'The endgame engine.', target: 'all' }
+    ];
+
+    // UPGRADES
+    const UPGRADES = [
+      { id: 'luck1', name: 'Weighted Zinc', description: '+5% Heads chance', cost: 20, effect: 'luck', value: 5, flavor: 'Illegal in 12 states.' },
+      { id: 'luck2', name: 'Magnet Core', description: '+8% Heads chance', cost: 500, effect: 'luck', value: 8, flavor: 'Attracts success.' },
+      { id: 'luck3', name: 'Insider Trading', description: '+10% Heads chance', cost: 2000, effect: 'luck', value: 10, flavor: 'You know the result before it lands.' },
+      { id: 'mult1', name: 'Polished Edges', description: '+10% Coin Value', cost: 100, effect: 'multiplier', value: 0.1, flavor: 'Aerodynamic coins earn more.' },
+      { id: 'mult2', name: 'Gold Plating', description: '+25% Coin Value', cost: 2000, effect: 'multiplier', value: 0.25, flavor: 'Everything is better gold-plated.' },
+      { id: 'mult3', name: 'Diamond Coating', description: '+50% Coin Value', cost: 10000, effect: 'multiplier', value: 0.5, flavor: 'Luxury compounds interest.' },
+      { id: 'crit1', name: 'Lucky Clover', description: '+1% Critical chance', cost: 150, effect: 'critical', value: 1, flavor: 'Landing on the edge pays 100x.' },
+      { id: 'crit2', name: 'Rabbit Foot', description: '+2% Critical chance', cost: 1000, effect: 'critical', value: 2, flavor: 'Luck intensifies.' },
+      { id: 'crit3', name: 'Four-Leaf Charm', description: '+3% Critical chance', cost: 5000, effect: 'critical', value: 3, flavor: 'Extremely rare fortune.' },
+      { id: 'pity1', name: 'Floor Mats', description: 'Tails pays 10% value', cost: 400, effect: 'pity', value: 0.1, flavor: 'Missed clicks give 10% value.' },
+      { id: 'pity2', name: 'Safety Net', description: 'Tails pays 25% value', cost: 3000, effect: 'pity', value: 0.25, flavor: 'Even failure pays.' },
+      { id: 'speed1', name: 'Caffeine Pills', description: 'Base auto-flip 25% faster', cost: 800, effect: 'speed', value: 0.25, flavor: 'Jittery but effective.' },
+      { id: 'speed2', name: 'Overclock Module', description: 'Base auto-flip 50% faster', cost: 5000, effect: 'speed', value: 0.5, flavor: 'WARNING: May void warranty.' }
+    ];
+
+    function App() {
+      const [bank, setBank] = useState(0);
+      const [slots, setSlots] = useState([{ id: 1, coin: 'penny', flipping: false }]);
+      const [unlockedCoins, setUnlockedCoins] = useState(['penny']);
+      const [ownedSpaces, setOwnedSpaces] = useState([]);
+      const [ownedTools, setOwnedTools] = useState([]);
+      const [ownedUpgrades, setOwnedUpgrades] = useState([]);
+      const [activeTab, setActiveTab] = useState('coins');
+      const [cps, setCps] = useState(0);
+      const [stats, setStats] = useState({ totalFlips: 0, totalEarned: 0, successfulFlips: 0, totalAttempts: 0 });
+      const [selectedCoinForSlot, setSelectedCoinForSlot] = useState(null);
+      const [achievements, setAchievements] = useState([]);
+      const [notifications, setNotifications] = useState([]);
+
+      const floatNumbersRef = useRef([]);
+      const audioContextRef = useRef(null);
+
+      // Achievement definitions
+      const ACHIEVEMENTS = [
+        { id: 'first_dollar', name: 'First Dollar', description: 'Earn $1', check: (s) => s.totalEarned >= 1 },
+        { id: 'hundred_flips', name: 'Century Club', description: '100 flips', check: (s) => s.totalFlips >= 100 },
+        { id: 'thousand_flips', name: 'Flip Master', description: '1,000 flips', check: (s) => s.totalFlips >= 1000 },
+        { id: 'lucky_streak', name: 'Lucky Streak', description: '75% success rate with 100+ flips', check: (s) => s.totalAttempts >= 100 && (s.successfulFlips / s.totalAttempts) >= 0.75 },
+        { id: 'big_money', name: 'High Roller', description: 'Earn $1,000', check: (s) => s.totalEarned >= 1000 },
+        { id: 'mega_money', name: 'Tycoon', description: 'Earn $100,000', check: (s) => s.totalEarned >= 100000 }
+      ];
+
+      // Initialize audio context
+      useEffect(() => {
+        audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+      }, []);
+
+      // Check for achievements
+      useEffect(() => {
+        ACHIEVEMENTS.forEach(achievement => {
+          if (!achievements.includes(achievement.id) && achievement.check(stats)) {
+            setAchievements(prev => [...prev, achievement.id]);
+            showNotification(`🏆 ${achievement.name}`, achievement.description);
+            playSound(880, 0.5, true);
+          }
+        });
+      }, [stats, achievements]);
+
+      // Show notification
+      const showNotification = useCallback((title, message) => {
+        const id = Date.now();
+        setNotifications(prev => [...prev, { id, title, message }]);
+        setTimeout(() => {
+          setNotifications(prev => prev.filter(n => n.id !== id));
+        }, 4000);
+      }, []);
+
+      // Play sound
+      const playSound = useCallback((frequency, duration, isWin) => {
+        if (!audioContextRef.current) return;
+
+        const oscillator = audioContextRef.current.createOscillator();
+        const gainNode = audioContextRef.current.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContextRef.current.destination);
+
+        oscillator.frequency.value = frequency;
+        oscillator.type = isWin ? 'sine' : 'triangle';
+
+        gainNode.gain.setValueAtTime(0.1, audioContextRef.current.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContextRef.current.currentTime + duration);
+
+        oscillator.start(audioContextRef.current.currentTime);
+        oscillator.stop(audioContextRef.current.currentTime + duration);
+      }, []);
+
+      // Show floating number
+      const showFloatingNumber = useCallback((value, x, y, isHeads, isCritical = false) => {
+        const id = Date.now() + Math.random();
+        const newFloat = {
+          id,
+          value,
+          x,
+          y,
+          isHeads,
+          isCritical
+        };
+
+        floatNumbersRef.current = [...floatNumbersRef.current, newFloat];
+
+        setTimeout(() => {
+          floatNumbersRef.current = floatNumbersRef.current.filter(f => f.id !== id);
+        }, 1500);
+      }, []);
+
+      // Calculate critical chance bonus
+      const getCriticalBonus = useCallback(() => {
+        return ownedUpgrades.reduce((total, upgradeId) => {
+          const upgrade = UPGRADES.find(u => u.id === upgradeId);
+          return upgrade?.effect === 'critical' ? total + upgrade.value : total;
+        }, 0);
+      }, [ownedUpgrades]);
+
+      // Calculate speed bonus
+      const getSpeedBonus = useCallback(() => {
+        return ownedUpgrades.reduce((total, upgradeId) => {
+          const upgrade = UPGRADES.find(u => u.id === upgradeId);
+          return upgrade?.effect === 'speed' ? total + upgrade.value : total;
+        }, 0);
+      }, [ownedUpgrades]);
+
+      // Calculate luck bonus
+      const getLuckBonus = useCallback(() => {
+        return ownedUpgrades.reduce((total, upgradeId) => {
+          const upgrade = UPGRADES.find(u => u.id === upgradeId);
+          return upgrade?.effect === 'luck' ? total + upgrade.value : total;
+        }, 0);
+      }, [ownedUpgrades]);
+
+      // Calculate multiplier
+      const getMultiplier = useCallback(() => {
+        return 1 + ownedUpgrades.reduce((total, upgradeId) => {
+          const upgrade = UPGRADES.find(u => u.id === upgradeId);
+          return upgrade?.effect === 'multiplier' ? total + upgrade.value : total;
+        }, 0);
+      }, [ownedUpgrades]);
+
+      // Calculate pity value
+      const getPityValue = useCallback(() => {
+        const pityUpgrade = ownedUpgrades.find(id => {
+          const upgrade = UPGRADES.find(u => u.id === id);
+          return upgrade?.effect === 'pity';
+        });
+        if (!pityUpgrade) return 0;
+        const upgrade = UPGRADES.find(u => u.id === pityUpgrade);
+        return upgrade?.value || 0;
+      }, [ownedUpgrades]);
+
+      // Flip a coin
+      const flipCoin = useCallback((slotIndex) => {
+        const slot = slots[slotIndex];
+        if (!slot || slot.flipping || !slot.coin) return;
+
+        // Set flipping state
+        setSlots(prev => prev.map((s, i) =>
+          i === slotIndex ? { ...s, flipping: true } : s
+        ));
+
+        setTimeout(() => {
+          const coin = COINS[slot.coin];
+          const luckBonus = getLuckBonus();
+          const multiplier = getMultiplier();
+          const pityValue = getPityValue();
+          const critBonus = getCriticalBonus();
+
+          const roll = Math.random() * 100;
+          const headsChance = 50 + luckBonus;
+          const criticalChance = 1 + critBonus;
+
+          let earnedValue = 0;
+          let isCritical = false;
+          let isHeads = false;
+
+          if (roll < criticalChance) {
+            // CRITICAL HIT - Edge landing
+            isCritical = true;
+            isHeads = true;
+            earnedValue = coin.value * 100 * multiplier;
+            playSound(880, 0.3, true);
+            createConfetti();
+          } else if (roll < headsChance) {
+            // HEADS
+            isHeads = true;
+            earnedValue = coin.value * multiplier;
+            playSound(660, 0.15, true);
+          } else {
+            // TAILS
+            earnedValue = coin.value * pityValue * multiplier;
+            playSound(220, 0.1, false);
+          }
+
+          setBank(prev => prev + earnedValue);
+          setStats(prev => ({
+            totalFlips: prev.totalFlips + 1,
+            totalEarned: prev.totalEarned + earnedValue,
+            successfulFlips: isHeads ? prev.successfulFlips + 1 : prev.successfulFlips,
+            totalAttempts: prev.totalAttempts + 1
+          }));
+
+          // Show floating number
+          const slotElement = document.querySelectorAll('.coin-slot')[slotIndex];
+          if (slotElement) {
+            const rect = slotElement.getBoundingClientRect();
+            showFloatingNumber(
+              earnedValue,
+              rect.left + rect.width / 2,
+              rect.top + rect.height / 2,
+              isHeads,
+              isCritical
+            );
+          }
+
+          // Reset flipping state
+          setSlots(prev => prev.map((s, i) =>
+            i === slotIndex ? { ...s, flipping: false } : s
+          ));
+        }, 600);
+      }, [slots, getLuckBonus, getMultiplier, getPityValue, getCriticalBonus, playSound, showFloatingNumber]);
+
+      // AUTO-FLIP ALL COINS - Start flipping automatically
+      useEffect(() => {
+        const speedBonus = getSpeedBonus();
+        const baseInterval = 1000;
+        const adjustedInterval = baseInterval / (1 + speedBonus);
+
+        const autoFlip = setInterval(() => {
+          slots.forEach((slot, index) => {
+            if (!slot.flipping) {
+              setTimeout(() => flipCoin(index), index * 100);
+            }
+          });
+        }, adjustedInterval);
+
+        return () => clearInterval(autoFlip);
+      }, [slots, flipCoin, getSpeedBonus]);
+
+      // SPACEBAR TO FLIP ALL COINS
+      useEffect(() => {
+        const handleKeyPress = (e) => {
+          if (e.code === 'Space' && !e.repeat) {
+            e.preventDefault();
+            slots.forEach((slot, index) => {
+              if (!slot.flipping) {
+                setTimeout(() => flipCoin(index), index * 50);
+              }
+            });
+          }
+        };
+
+        window.addEventListener('keydown', handleKeyPress);
+        return () => window.removeEventListener('keydown', handleKeyPress);
+      }, [slots, flipCoin]);
+
+      // Auto-flippers
+      useEffect(() => {
+        const intervals = [];
+
+        ownedTools.forEach(toolId => {
+          const tool = TOOLS.find(t => t.id === toolId);
+          if (!tool) return;
+
+          const interval = setInterval(() => {
+            if (tool.target === 'all') {
+              // Flip all coins
+              slots.forEach((_, index) => {
+                setTimeout(() => flipCoin(index), index * 50);
+              });
+            } else if (tool.target === 'slot0') {
+              // Flip only slot 0
+              if (slots[0]) flipCoin(0);
+            } else if (tool.target === 'random') {
+              // Flip random coin
+              const randomIndex = Math.floor(Math.random() * slots.length);
+              flipCoin(randomIndex);
+            } else if (tool.target === 'row1') {
+              // Flip first row (up to 4 coins)
+              const rowSize = Math.min(4, slots.length);
+              for (let i = 0; i < rowSize; i++) {
+                setTimeout(() => flipCoin(i), i * 50);
+              }
+            }
+          }, tool.interval);
+
+          intervals.push(interval);
+        });
+
+        return () => intervals.forEach(clearInterval);
+      }, [ownedTools, slots, flipCoin]);
+
+      // Calculate CPS
+      useEffect(() => {
+        const headsChance = (50 + getLuckBonus()) / 100;
+        const multiplier = getMultiplier();
+        const speedBonus = getSpeedBonus();
+
+        let totalCps = 0;
+
+        // Base auto-flip (affected by speed upgrades)
+        const baseFlipsPerSecond = 1 * (1 + speedBonus);
+        const baseValue = slots.reduce((sum, slot) => {
+          const coin = COINS[slot.coin];
+          return sum + coin.value * headsChance * multiplier;
+        }, 0);
+        totalCps += baseValue * baseFlipsPerSecond;
+
+        ownedTools.forEach(toolId => {
+          const tool = TOOLS.find(t => t.id === toolId);
+          if (!tool) return;
+
+          const flipsPerSecond = 1000 / tool.interval;
+          let coinsFlipped = 0;
+
+          if (tool.target === 'all') {
+            coinsFlipped = slots.length;
+          } else if (tool.target === 'slot0') {
+            coinsFlipped = slots[0] ? 1 : 0;
+          } else if (tool.target === 'random') {
+            coinsFlipped = 1;
+          } else if (tool.target === 'row1') {
+            coinsFlipped = Math.min(4, slots.length);
+          }
+
+          const avgValue = slots.reduce((sum, slot) => {
+            const coin = COINS[slot.coin];
+            return sum + coin.value * headsChance * multiplier;
+          }, 0) / slots.length;
+
+          totalCps += flipsPerSecond * coinsFlipped * avgValue;
+        });
+
+        setCps(totalCps);
+      }, [ownedTools, slots, getLuckBonus, getMultiplier, getSpeedBonus]);
+
+      // Buy coin
+      const buyCoin = useCallback((coinType) => {
+        const coin = COINS[coinType];
+        if (bank >= coin.cost && !unlockedCoins.includes(coinType)) {
+          setBank(prev => prev - coin.cost);
+          setUnlockedCoins(prev => [...prev, coinType]);
+          createConfetti();
+          playSound(880, 0.3, true);
+        }
+      }, [bank, unlockedCoins, playSound]);
+
+      // Buy space
+      const buySpace = useCallback((spaceId) => {
+        const space = SPACE_UPGRADES.find(s => s.id === spaceId);
+        if (!space || bank < space.cost || ownedSpaces.includes(spaceId)) return;
+
+        setBank(prev => prev - space.cost);
+        setOwnedSpaces(prev => [...prev, spaceId]);
+
+        // Add new slots
+        const currentSlots = slots.length;
+        const newSlotCount = space.slots - currentSlots;
+        if (newSlotCount > 0) {
+          const newSlots = Array.from({ length: newSlotCount }, (_, i) => ({
+            id: currentSlots + i + 1,
+            coin: 'penny',
+            flipping: false
+          }));
+          setSlots(prev => [...prev, ...newSlots]);
+        }
+
+        createConfetti();
+        playSound(880, 0.3, true);
+      }, [bank, ownedSpaces, slots, playSound]);
+
+      // Buy tool
+      const buyTool = useCallback((toolId) => {
+        const tool = TOOLS.find(t => t.id === toolId);
+        if (!tool || bank < tool.cost || ownedTools.includes(toolId)) return;
+
+        setBank(prev => prev - tool.cost);
+        setOwnedTools(prev => [...prev, toolId]);
+        createConfetti();
+        playSound(880, 0.3, true);
+      }, [bank, ownedTools, playSound]);
+
+      // Buy upgrade
+      const buyUpgrade = useCallback((upgradeId) => {
+        const upgrade = UPGRADES.find(u => u.id === upgradeId);
+        if (!upgrade || bank < upgrade.cost || ownedUpgrades.includes(upgradeId)) return;
+
+        setBank(prev => prev - upgrade.cost);
+        setOwnedUpgrades(prev => [...prev, upgradeId]);
+        createConfetti();
+        playSound(880, 0.3, true);
+      }, [bank, ownedUpgrades, playSound]);
+
+      // Change coin in slot
+      const changeCoinInSlot = useCallback((slotIndex, coinType) => {
+        setSlots(prev => prev.map((s, i) =>
+          i === slotIndex ? { ...s, coin: coinType } : s
+        ));
+        setSelectedCoinForSlot(null);
+      }, []);
+
+      // Handle slot click for coin selection
+      const handleSlotClick = useCallback((slotIndex) => {
+        if (selectedCoinForSlot) {
+          changeCoinInSlot(slotIndex, selectedCoinForSlot);
+        } else {
+          flipCoin(slotIndex);
+        }
+      }, [selectedCoinForSlot, changeCoinInSlot, flipCoin]);
+
+      // Confetti
+      const createConfetti = useCallback(() => {
+        const colors = ['#FFD700', '#00F0FF', '#FF006E', '#00FF00', '#FFA500'];
+        for (let i = 0; i < 50; i++) {
+          setTimeout(() => {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * window.innerWidth + 'px';
+            confetti.style.top = '-20px';
+            confetti.style.width = '10px';
+            confetti.style.height = '10px';
+            confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.animation = `confettiFall ${2 + Math.random() * 2}s linear forwards`;
+            document.body.appendChild(confetti);
+
+            setTimeout(() => confetti.remove(), 4000);
+          }, i * 20);
+        }
+      }, []);
+
+      // Get maximum possible slots based on owned spaces
+      const getMaxSlots = useCallback(() => {
+        if (ownedSpaces.length === 0) return 1;
+        const lastSpace = SPACE_UPGRADES.find(s => s.id === ownedSpaces[ownedSpaces.length - 1]);
+        return lastSpace ? lastSpace.slots : 1;
+      }, [ownedSpaces]);
+
+      // Format currency
+      const formatCurrency = (value) => {
+        if (value >= 1000000) return `$${(value / 1000000).toFixed(2)}M`;
+        if (value >= 1000) return `$${(value / 1000).toFixed(2)}K`;
+        return `$${value.toFixed(2)}`;
+      };
+
+      return (
+        <div className="app-container">
+          <header className="header">
+            <div className="header-content">
+              <div className="title-group">
+                <h1 className="title">FLIP-O-NOMICS</h1>
+                <div className="tagline">The Infinite Mint</div>
+              </div>
+              <div className="ledger">
+                <div className="stat">
+                  <div className="stat-label">Bank</div>
+                  <div className="stat-value">{formatCurrency(bank)}</div>
+                </div>
+                <div className="stat">
+                  <div className="stat-label">$/Second</div>
+                  <div className="stat-value">{formatCurrency(cps)}</div>
+                </div>
+                <div className="stat">
+                  <div className="stat-label">Success</div>
+                  <div className="stat-value">{stats.successfulFlips.toLocaleString()}</div>
+                </div>
+                <div className="stat">
+                  <div className="stat-label">Success Rate</div>
+                  <div className="stat-value">
+                    {stats.totalAttempts > 0 ? ((stats.successfulFlips / stats.totalAttempts) * 100).toFixed(1) : '0.0'}%
+                  </div>
+                </div>
+                <div className="stat">
+                  <div className="stat-label">Total Flips</div>
+                  <div className="stat-value">{stats.totalFlips.toLocaleString()}</div>
+                </div>
+              </div>
+              <div style={{ width: '1px' }}></div>
+            </div>
+          </header>
+
+          <main className="main-content">
+            <div className="coin-mat">
+              {selectedCoinForSlot && (
+                <div style={{
+                  position: 'absolute',
+                  top: '1rem',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  background: 'rgba(0, 0, 0, 0.9)',
+                  color: '#FFD700',
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '8px',
+                  fontSize: '0.9rem',
+                  zIndex: 10,
+                  border: '1px solid #FFD700'
+                }}>
+                  Click a slot to place {COINS[selectedCoinForSlot].name}
+                </div>
+              )}
+              <div className={`coin-grid slots-${Math.max(slots.length, getMaxSlots())}`}>
+                {Array.from({ length: getMaxSlots() }).map((_, index) => {
+                  const slot = slots[index];
+                  const isLocked = index >= slots.length;
+
+                  return (
+                    <div key={index} className="coin-slot">
+                      {slot && slot.coin ? (
+                        <>
+                          <button
+                            className={`coin-button coin-${slot.coin} ${slot.flipping ? 'flipping' : ''} ${selectedCoinForSlot ? 'selecting' : ''}`}
+                            onClick={() => handleSlotClick(index)}
+                            disabled={slot.flipping && !selectedCoinForSlot}
+                          >
+                            {COINS[slot.coin].symbol}
+                          </button>
+                          <div className="coin-label">{COINS[slot.coin].name}</div>
+                        </>
+                      ) : isLocked ? (
+                        <>
+                          <div className="empty-slot locked">
+                            🔒<br />Locked
+                          </div>
+                          <div className="coin-label" style={{ opacity: 0.3 }}>Buy Space</div>
+                        </>
+                      ) : (
+                        <>
+                          <div
+                            className="empty-slot"
+                            onClick={() => {
+                              if (selectedCoinForSlot) {
+                                changeCoinInSlot(index, selectedCoinForSlot);
+                              }
+                            }}
+                          >
+                            {selectedCoinForSlot ? 'Click to place' : 'Empty'}
+                          </div>
+                          <div className="coin-label" style={{ opacity: 0.5 }}>Available</div>
+                        </>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="shop">
+              <div className="shop-tabs">
+                <button
+                  className={`tab-button ${activeTab === 'coins' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('coins')}
+                >
+                  Coins
+                </button>
+                <button
+                  className={`tab-button ${activeTab === 'space' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('space')}
+                >
+                  Space
+                </button>
+                <button
+                  className={`tab-button ${activeTab === 'tools' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('tools')}
+                >
+                  Tools
+                </button>
+                <button
+                  className={`tab-button ${activeTab === 'upgrades' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('upgrades')}
+                >
+                  Upgrades
+                </button>
+              </div>
+
+              <div className="shop-items">
+                {activeTab === 'coins' && Object.entries(COINS).map(([type, coin]) => {
+                  const isOwned = unlockedCoins.includes(type);
+                  const canAfford = bank >= coin.cost;
+                  const isSelected = selectedCoinForSlot === type;
+
+                  return (
+                    <div
+                      key={type}
+                      className={`shop-item ${isOwned ? 'owned' : ''} ${!canAfford && !isOwned ? 'disabled' : ''}`}
+                      style={isSelected ? { borderColor: '#00FF88', background: 'rgba(0, 255, 136, 0.1)' } : {}}
+                      onClick={() => {
+                        if (isOwned) {
+                          setSelectedCoinForSlot(isSelected ? null : type);
+                        } else if (canAfford) {
+                          buyCoin(type);
+                        }
+                      }}
+                    >
+                      <div className="item-header">
+                        <div className="item-name">{coin.name}</div>
+                        {!isOwned && coin.cost > 0 && (
+                          <div className={`item-cost ${canAfford ? 'affordable' : 'unaffordable'}`}>
+                            {formatCurrency(coin.cost)}
+                          </div>
+                        )}
+                      </div>
+                      <div className="item-description">
+                        Value: {formatCurrency(coin.value)} per flip
+                        {coin.flavor && <><br /><em style={{ opacity: 0.7, fontSize: '0.8rem' }}>{coin.flavor}</em></>}
+                      </div>
+                      {isOwned && !isSelected && <div className="item-owned-badge">CLICK TO SELECT</div>}
+                      {isSelected && <div className="item-owned-badge" style={{ background: 'rgba(0, 255, 136, 0.2)', color: '#00FF88', borderColor: '#00FF88' }}>SELECTED ✓</div>}
+                    </div>
+                  );
+                })}
+
+                {activeTab === 'space' && SPACE_UPGRADES.map(space => {
+                  const isOwned = ownedSpaces.includes(space.id);
+                  const canAfford = bank >= space.cost;
+
+                  return (
+                    <div
+                      key={space.id}
+                      className={`shop-item ${isOwned ? 'owned' : ''} ${!canAfford && !isOwned ? 'disabled' : ''}`}
+                      onClick={() => !isOwned && buySpace(space.id)}
+                    >
+                      <div className="item-header">
+                        <div className="item-name">{space.name}</div>
+                        {!isOwned && (
+                          <div className={`item-cost ${canAfford ? 'affordable' : 'unaffordable'}`}>
+                            {formatCurrency(space.cost)}
+                          </div>
+                        )}
+                      </div>
+                      <div className="item-description">
+                        Unlocks {space.slots} total coin slots
+                        <br />
+                        <em style={{ opacity: 0.7, fontSize: '0.8rem' }}>{space.description}</em>
+                      </div>
+                      {isOwned && <div className="item-owned-badge">OWNED</div>}
+                    </div>
+                  );
+                })}
+
+                {activeTab === 'tools' && TOOLS.map(tool => {
+                  const isOwned = ownedTools.includes(tool.id);
+                  const canAfford = bank >= tool.cost;
+
+                  return (
+                    <div
+                      key={tool.id}
+                      className={`shop-item ${isOwned ? 'owned' : ''} ${!canAfford && !isOwned ? 'disabled' : ''}`}
+                      onClick={() => !isOwned && buyTool(tool.id)}
+                    >
+                      <div className="item-header">
+                        <div className="item-name">{tool.name}</div>
+                        {!isOwned && (
+                          <div className={`item-cost ${canAfford ? 'affordable' : 'unaffordable'}`}>
+                            {formatCurrency(tool.cost)}
+                          </div>
+                        )}
+                      </div>
+                      <div className="item-description">
+                        {tool.description}
+                        {tool.flavor && <><br /><em style={{ opacity: 0.7, fontSize: '0.8rem' }}>{tool.flavor}</em></>}
+                      </div>
+                      {isOwned && <div className="item-owned-badge">ACTIVE</div>}
+                    </div>
+                  );
+                })}
+
+                {activeTab === 'upgrades' && UPGRADES.map(upgrade => {
+                  const isOwned = ownedUpgrades.includes(upgrade.id);
+                  const canAfford = bank >= upgrade.cost;
+
+                  return (
+                    <div
+                      key={upgrade.id}
+                      className={`shop-item ${isOwned ? 'owned' : ''} ${!canAfford && !isOwned ? 'disabled' : ''}`}
+                      onClick={() => !isOwned && buyUpgrade(upgrade.id)}
+                    >
+                      <div className="item-header">
+                        <div className="item-name">{upgrade.name}</div>
+                        {!isOwned && (
+                          <div className={`item-cost ${canAfford ? 'affordable' : 'unaffordable'}`}>
+                            {formatCurrency(upgrade.cost)}
+                          </div>
+                        )}
+                      </div>
+                      <div className="item-description">
+                        {upgrade.description}
+                        {upgrade.flavor && <><br /><em style={{ opacity: 0.7, fontSize: '0.8rem' }}>{upgrade.flavor}</em></>}
+                      </div>
+                      {isOwned && <div className="item-owned-badge">ACTIVE</div>}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </main>
+
+          {/* Floating Numbers */}
+          {floatNumbersRef.current.map(float => (
+            <div
+              key={float.id}
+              className={`float-number ${float.isHeads ? 'heads' : 'tails'} ${float.isCritical ? 'critical' : ''}`}
+              style={{
+                left: `${float.x}px`,
+                top: `${float.y}px`
+              }}
+            >
+              {float.isCritical && '🎰 '}
+              {formatCurrency(float.value)}
+              {float.isCritical && ' CRITICAL!'}
+            </div>
+          ))}
+
+          {/* Notifications */}
+          <div className="notification-container">
+            {notifications.map(notif => (
+              <div key={notif.id} className="notification">
+                <div className="notification-title">{notif.title}</div>
+                <div className="notification-message">{notif.message}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Hotkey Hint */}
+          <div className="hotkey-hint">
+            Press <kbd>SPACE</kbd> to flip all coins
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+
+</html>
