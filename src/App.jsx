@@ -52,18 +52,44 @@ const UPGRADES = [
 ];
 
 function App() {
-  const [bank, setBank] = useState(0);
-  const [slots, setSlots] = useState([{ id: 1, coin: 'penny', flipping: false }]);
-  const [unlockedCoins, setUnlockedCoins] = useState(['penny']);
-  const [ownedSpaces, setOwnedSpaces] = useState([]);
-  const [ownedTools, setOwnedTools] = useState([]);
-  const [ownedUpgrades, setOwnedUpgrades] = useState([]);
+  // Load state from local storage or use default
+  const loadState = (key, defaultValue) => {
+    const saved = localStorage.getItem(key);
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error('Failed to parse saved state', e);
+        return defaultValue;
+      }
+    }
+    return defaultValue;
+  };
+
+  const [bank, setBank] = useState(() => loadState('bank', 0));
+  const [slots, setSlots] = useState(() => loadState('slots', [{ id: 1, coin: 'penny', flipping: false }]));
+  const [unlockedCoins, setUnlockedCoins] = useState(() => loadState('unlockedCoins', ['penny']));
+  const [ownedSpaces, setOwnedSpaces] = useState(() => loadState('ownedSpaces', []));
+  const [ownedTools, setOwnedTools] = useState(() => loadState('ownedTools', []));
+  const [ownedUpgrades, setOwnedUpgrades] = useState(() => loadState('ownedUpgrades', []));
   const [activeTab, setActiveTab] = useState('coins');
   const [cps, setCps] = useState(0);
-  const [stats, setStats] = useState({ totalFlips: 0, totalEarned: 0, successfulFlips: 0, totalAttempts: 0 });
+  const [stats, setStats] = useState(() => loadState('stats', { totalFlips: 0, totalEarned: 0, successfulFlips: 0, totalAttempts: 0 }));
   const [selectedCoinForSlot, setSelectedCoinForSlot] = useState(null);
-  const [achievements, setAchievements] = useState([]);
+  const [achievements, setAchievements] = useState(() => loadState('achievements', []));
   const [notifications, setNotifications] = useState([]);
+
+  // Save state to local storage
+  useEffect(() => {
+    localStorage.setItem('bank', JSON.stringify(bank));
+    localStorage.setItem('slots', JSON.stringify(slots));
+    localStorage.setItem('unlockedCoins', JSON.stringify(unlockedCoins));
+    localStorage.setItem('ownedSpaces', JSON.stringify(ownedSpaces));
+    localStorage.setItem('ownedTools', JSON.stringify(ownedTools));
+    localStorage.setItem('ownedUpgrades', JSON.stringify(ownedUpgrades));
+    localStorage.setItem('stats', JSON.stringify(stats));
+    localStorage.setItem('achievements', JSON.stringify(achievements));
+  }, [bank, slots, unlockedCoins, ownedSpaces, ownedTools, ownedUpgrades, stats, achievements]);
 
   const floatNumbersRef = useRef([]);
   const audioContextRef = useRef(null);
