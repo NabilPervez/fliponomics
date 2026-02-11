@@ -209,7 +209,8 @@ body::before {
 .coin-grid.slots-29,
 .coin-grid.slots-30,
 .coin-grid.slots-31,
-.coin-grid.slots-32 {
+.coin-grid.slots-32,
+.coin-grid.slots-large {
   grid-template-columns: repeat(8, 1fr);
 }
 
@@ -1130,8 +1131,9 @@ body::before {
   .coin-grid.slots-29,
   .coin-grid.slots-30,
   .coin-grid.slots-31,
-  .coin-grid.slots-32 {
-    grid-template-columns: repeat(8, 1fr);
+  .coin-grid.slots-32,
+  .coin-grid.slots-large {
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
   }
 
   .shop {

@@ -179,17 +179,17 @@ export const COINS = {
 
 // --- 2. THE TABLE (Space Expansion) ---
 export const TABLE_MILESTONES = [
-    { slots: 1, name: "Coaster", cost: 0, desc: "It's just a cardboard circle." },
-    { slots: 2, name: "Mousepad", cost: 15.00, desc: "Double the friction, double the fun." },
-    { slots: 4, name: "Cafeteria Tray", cost: 150.00, desc: "Smells like old french fries." },
-    { slots: 6, name: "Coffee Table", cost: 500.00, desc: "Perfect for casual flipping." },
-    { slots: 8, name: "Card Table", cost: 1200.00, desc: "Felt surface for professional action." },
-    { slots: 12, name: "Poker Table", cost: 5000.00, desc: "All-in on coin flips." },
-    { slots: 16, name: "Craps Table", cost: 15000.00, desc: "High stakes require high surface area." },
-    { slots: 24, name: "Roulette Wheel", cost: 75000.00, desc: "Spin to win, flip to profit." },
-    { slots: 32, name: "Server Rack", cost: 500000.00, desc: "Digitized flipping slots. High density." },
-    { slots: 48, name: "Mainframe", cost: 5000000.00, desc: "Industrial-scale coin operations." },
-    { slots: 64, name: "Quantum Array", cost: 50000000.00, desc: "Superposition flipping technology." }
+    { id: 'space0', slots: 1, name: "Coaster", cost: 0, desc: "It's just a cardboard circle." },
+    { id: 'space1', slots: 2, name: "Mousepad", cost: 15.00, desc: "Double the friction, double the fun." },
+    { id: 'space2', slots: 4, name: "Cafeteria Tray", cost: 150.00, desc: "Smells like old french fries." },
+    { id: 'space3', slots: 6, name: "Coffee Table", cost: 500.00, desc: "Perfect for casual flipping." },
+    { id: 'space4', slots: 8, name: "Card Table", cost: 1200.00, desc: "Felt surface for professional action." },
+    { id: 'space5', slots: 12, name: "Poker Table", cost: 5000.00, desc: "All-in on coin flips." },
+    { id: 'space6', slots: 16, name: "Craps Table", cost: 15000.00, desc: "High stakes require high surface area." },
+    { id: 'space7', slots: 24, name: "Roulette Wheel", cost: 75000.00, desc: "Spin to win, flip to profit." },
+    { id: 'space8', slots: 32, name: "Server Rack", cost: 500000.00, desc: "Digitized flipping slots. High density." },
+    { id: 'space9', slots: 48, name: "Mainframe", cost: 5000000.00, desc: "Industrial-scale coin operations." },
+    { id: 'space10', slots: 64, name: "Quantum Array", cost: 50000000.00, desc: "Superposition flipping technology." }
 ];
 
 // --- 3. AUTOMATION (Robotics) ---

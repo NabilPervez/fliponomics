@@ -505,8 +505,10 @@ function App() {
   // Get maximum possible slots based on owned spaces
   const getMaxSlots = useCallback(() => {
     if (ownedSpaces.length === 0) return 1;
-    const lastSpace = SPACE_UPGRADES.find(s => s.id === ownedSpaces[ownedSpaces.length - 1]);
-    return lastSpace ? lastSpace.slots : 1;
+    return ownedSpaces.reduce((max, spaceId) => {
+      const space = SPACE_UPGRADES.find(s => s.id === spaceId);
+      return space ? Math.max(max, space.slots) : max;
+    }, 1);
   }, [ownedSpaces]);
 
   // Format currency
@@ -579,7 +581,7 @@ function App() {
               Click a slot to place {COINS[selectedCoinForSlot].name}
             </div>
           )}
-          <div className={`coin-grid slots-${Math.max(slots.length, getMaxSlots())}`}>
+          <div className={`coin-grid ${Math.max(slots.length, getMaxSlots()) > 32 ? 'slots-large' : `slots-${Math.max(slots.length, getMaxSlots())}`}`}>
             {Array.from({ length: getMaxSlots() }).map((_, index) => {
               const slot = slots[index];
               const isLocked = index >= slots.length;
