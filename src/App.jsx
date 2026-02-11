@@ -2,54 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import './index.css';
 
 // COIN DEFINITIONS
-const COINS = {
-  penny: { name: 'Penny', value: 0.01, cost: 0, symbol: '1¢', flavor: 'Find a penny, pick it up.' },
-  nickel: { name: 'Nickel', value: 0.05, cost: 1, symbol: '5¢', flavor: 'Five times the copper. Sort of.' },
-  dime: { name: 'Dime', value: 0.10, cost: 5, symbol: '10¢', flavor: 'Smaller, yet more valuable. Economics is weird.' },
-  quarter: { name: 'Quarter', value: 0.25, cost: 20, symbol: '25¢', flavor: 'The laundry machine standard.' },
-  loonie: { name: 'Loonie', value: 1.00, cost: 100, symbol: '$1', flavor: 'A golden bird from the north.' },
-  chip: { name: 'Casino Chip', value: 5.00, cost: 500, symbol: '$5', flavor: 'The house always wins. Now you are the house.' },
-  doubloon: { name: 'Gold Doubloon', value: 50.00, cost: 5000, symbol: '$50', flavor: 'Yarr! Genuine pirate treasure.' },
-  bitcoin: { name: 'Bitcoin', value: 35000, cost: 1000000, symbol: '₿', flavor: 'Volatile, but digital.' }
-};
-
-// SPACE UPGRADES
-const SPACE_UPGRADES = [
-  { id: 'space1', name: 'Mousepad', slots: 2, cost: 3, description: 'Double the friction, double the fun.' },
-  { id: 'space2', name: 'Cafeteria Tray', slots: 4, cost: 30, description: 'Smells like old french fries, fits 4 coins.' },
-  { id: 'space3', name: 'Card Table', slots: 8, cost: 250, description: 'Felt surface for professional action.' },
-  { id: 'space4', name: 'Craps Table', slots: 16, cost: 3000, description: 'High stakes require high surface area.' },
-  { id: 'space5', name: 'Server Rack', slots: 32, cost: 100000, description: 'Digitized flipping slots. High density.' }
-];
-
-// AUTOMATION TOOLS
-const TOOLS = [
-  { id: 'tool1', name: 'Fidget Finger', description: 'Flips Slot #1 every 5s', interval: 5000, cost: 10, flavor: 'Good for early game.', target: 'slot0' },
-  { id: 'tool2', name: 'Drinking Bird', description: 'Flips Random Slot every 2s', interval: 2000, cost: 50, flavor: 'It bobs for water, hits a coin.', target: 'random' },
-  { id: 'tool3', name: "Dealer's Hand", description: 'Flips Row #1 every 3s', interval: 3000, cost: 200, flavor: 'Efficient for Card Tables.', target: 'row1' },
-  { id: 'tool4', name: 'Industrial Fan', description: 'Flips ALL slots every 4s', interval: 4000, cost: 1000, flavor: 'Brute force wind power.', target: 'all' },
-  { id: 'tool5', name: 'Mechanical Arm', description: 'Flips ALL slots every 2s', interval: 2000, cost: 5000, flavor: 'Precision robotics.', target: 'all' },
-  { id: 'tool6', name: 'Tesla Coil', description: 'Flips ALL slots every 1s', interval: 1000, cost: 20000, flavor: 'Electromagnetic acceleration.', target: 'all' },
-  { id: 'tool7', name: 'Time Dilator', description: 'Flips ALL slots 5/s', interval: 200, cost: 50000, flavor: 'Bends time locally.', target: 'all' },
-  { id: 'tool8', name: 'Quantum Tunneler', description: 'Flips ALL slots 10/s', interval: 100, cost: 100000, flavor: 'The endgame engine.', target: 'all' }
-];
-
-// UPGRADES
-const UPGRADES = [
-  { id: 'luck1', name: 'Weighted Zinc', description: '+5% Heads chance', cost: 20, effect: 'luck', value: 5, flavor: 'Illegal in 12 states.' },
-  { id: 'luck2', name: 'Magnet Core', description: '+8% Heads chance', cost: 500, effect: 'luck', value: 8, flavor: 'Attracts success.' },
-  { id: 'luck3', name: 'Insider Trading', description: '+10% Heads chance', cost: 2000, effect: 'luck', value: 10, flavor: 'You know the result before it lands.' },
-  { id: 'mult1', name: 'Polished Edges', description: '+10% Coin Value', cost: 100, effect: 'multiplier', value: 0.1, flavor: 'Aerodynamic coins earn more.' },
-  { id: 'mult2', name: 'Gold Plating', description: '+25% Coin Value', cost: 2000, effect: 'multiplier', value: 0.25, flavor: 'Everything is better gold-plated.' },
-  { id: 'mult3', name: 'Diamond Coating', description: '+50% Coin Value', cost: 10000, effect: 'multiplier', value: 0.5, flavor: 'Luxury compounds interest.' },
-  { id: 'crit1', name: 'Lucky Clover', description: '+1% Critical chance', cost: 150, effect: 'critical', value: 1, flavor: 'Landing on the edge pays 100x.' },
-  { id: 'crit2', name: 'Rabbit Foot', description: '+2% Critical chance', cost: 1000, effect: 'critical', value: 2, flavor: 'Luck intensifies.' },
-  { id: 'crit3', name: 'Four-Leaf Charm', description: '+3% Critical chance', cost: 5000, effect: 'critical', value: 3, flavor: 'Extremely rare fortune.' },
-  { id: 'pity1', name: 'Floor Mats', description: 'Tails pays 10% value', cost: 400, effect: 'pity', value: 0.1, flavor: 'Missed clicks give 10% value.' },
-  { id: 'pity2', name: 'Safety Net', description: 'Tails pays 25% value', cost: 3000, effect: 'pity', value: 0.25, flavor: 'Even failure pays.' },
-  { id: 'speed1', name: 'Caffeine Pills', description: 'Base auto-flip 25% faster', cost: 800, effect: 'speed', value: 0.25, flavor: 'Jittery but effective.' },
-  { id: 'speed2', name: 'Overclock Module', description: 'Base auto-flip 50% faster', cost: 5000, effect: 'speed', value: 0.5, flavor: 'WARNING: May void warranty.' }
-];
+import { COINS, TABLE_MILESTONES as SPACE_UPGRADES, TOOLS, UPGRADES } from './utils/gameData';
 
 function App() {
   // Load state from local storage or use default
@@ -190,44 +143,45 @@ function App() {
   // Calculate critical chance bonus
   const getCriticalBonus = useCallback(() => {
     return ownedUpgrades.reduce((total, upgradeId) => {
-      const upgrade = UPGRADES.find(u => u.id === upgradeId);
-      return upgrade?.effect === 'critical' ? total + upgrade.value : total;
+      const upgrade = UPGRADES[upgradeId];
+      return upgrade?.effect?.type === 'crit' ? total + upgrade.effect.value : total;
     }, 0);
   }, [ownedUpgrades]);
 
   // Calculate speed bonus
   const getSpeedBonus = useCallback(() => {
     return ownedUpgrades.reduce((total, upgradeId) => {
-      const upgrade = UPGRADES.find(u => u.id === upgradeId);
-      return upgrade?.effect === 'speed' ? total + upgrade.value : total;
+      const upgrade = UPGRADES[upgradeId];
+      return upgrade?.effect?.type === 'speed' ? total + upgrade.effect.value : total;
     }, 0);
   }, [ownedUpgrades]);
 
   // Calculate luck bonus
   const getLuckBonus = useCallback(() => {
     return ownedUpgrades.reduce((total, upgradeId) => {
-      const upgrade = UPGRADES.find(u => u.id === upgradeId);
-      return upgrade?.effect === 'luck' ? total + upgrade.value : total;
+      const upgrade = UPGRADES[upgradeId];
+      return upgrade?.effect?.type === 'luck' ? total + upgrade.effect.value : total;
     }, 0);
   }, [ownedUpgrades]);
 
   // Calculate multiplier
   const getMultiplier = useCallback(() => {
     return 1 + ownedUpgrades.reduce((total, upgradeId) => {
-      const upgrade = UPGRADES.find(u => u.id === upgradeId);
-      return upgrade?.effect === 'multiplier' ? total + upgrade.value : total;
+      const upgrade = UPGRADES[upgradeId];
+      return upgrade?.effect?.type === 'valueMult' ? total + upgrade.effect.value : total;
     }, 0);
   }, [ownedUpgrades]);
 
   // Calculate pity value
   const getPityValue = useCallback(() => {
     const pityUpgrade = ownedUpgrades.find(id => {
-      const upgrade = UPGRADES.find(u => u.id === id);
-      return upgrade?.effect === 'pity';
+      const upgrade = UPGRADES[id];
+      return upgrade?.effect?.type === 'tailsValue';
     });
     if (!pityUpgrade) return 0;
-    const upgrade = UPGRADES.find(u => u.id === pityUpgrade);
-    return upgrade?.value || 0;
+    const upgrade = UPGRADES[pityUpgrade];
+    // Check if the structure is nested effect or direct value (gameData uses effect.value)
+    return upgrade?.effect?.value || 0;
   }, [ownedUpgrades]);
 
   // Flip a coin
@@ -490,10 +444,11 @@ function App() {
 
   // Buy tool
   const buyTool = useCallback((toolId) => {
-    const tool = TOOLS.find(t => t.id === toolId);
-    if (!tool || bank < tool.cost || ownedTools.includes(toolId)) return;
+    const tool = TOOLS[toolId];
+    // Use baseCost from gameData
+    if (!tool || bank < (tool.baseCost || tool.cost) || ownedTools.includes(toolId)) return;
 
-    setBank(prev => prev - tool.cost);
+    setBank(prev => prev - (tool.baseCost || tool.cost));
     setOwnedTools(prev => [...prev, toolId]);
     createConfetti();
     playSound(880, 0.3, true);
@@ -501,7 +456,7 @@ function App() {
 
   // Buy upgrade
   const buyUpgrade = useCallback((upgradeId) => {
-    const upgrade = UPGRADES.find(u => u.id === upgradeId);
+    const upgrade = UPGRADES[upgradeId];
     if (!upgrade || bank < upgrade.cost || ownedUpgrades.includes(upgradeId)) return;
 
     setBank(prev => prev - upgrade.cost);
@@ -762,9 +717,11 @@ function App() {
               );
             })}
 
-            {activeTab === 'tools' && TOOLS.map(tool => {
+            {activeTab === 'tools' && Object.values(TOOLS).map(tool => {
               const isOwned = ownedTools.includes(tool.id);
-              const canAfford = bank >= tool.cost;
+              // Handle baseCost vs cost difference from old/new data
+              const cost = tool.baseCost || tool.cost;
+              const canAfford = bank >= cost;
 
               return (
                 <div
@@ -776,22 +733,23 @@ function App() {
                     <div className="item-name">{tool.name}</div>
                     {!isOwned && (
                       <div className={`item-cost ${canAfford ? 'affordable' : 'unaffordable'}`}>
-                        {formatCurrency(tool.cost)}
+                        {formatCurrency(cost)}
                       </div>
                     )}
                   </div>
                   <div className="item-description">
                     {tool.description}
-                    {tool.flavor && <><br /><em style={{ opacity: 0.7, fontSize: '0.8rem' }}>{tool.flavor}</em></>}
                   </div>
                   {isOwned && <div className="item-owned-badge">ACTIVE</div>}
                 </div>
               );
             })}
 
-            {activeTab === 'upgrades' && UPGRADES.map(upgrade => {
+            {activeTab === 'upgrades' && Object.values(UPGRADES).map(upgrade => {
               const isOwned = ownedUpgrades.includes(upgrade.id);
               const canAfford = bank >= upgrade.cost;
+              // Filter out upgrades that might not have effects properly defined if mixed data
+              if (!upgrade.effect) return null;
 
               return (
                 <div
@@ -809,7 +767,6 @@ function App() {
                   </div>
                   <div className="item-description">
                     {upgrade.description}
-                    {upgrade.flavor && <><br /><em style={{ opacity: 0.7, fontSize: '0.8rem' }}>{upgrade.flavor}</em></>}
                   </div>
                   {isOwned && <div className="item-owned-badge">ACTIVE</div>}
                 </div>
