@@ -449,6 +449,13 @@ function App() {
     if (bank >= coin.cost && !unlockedCoins.includes(coinType)) {
       setBank(prev => prev - coin.cost);
       setUnlockedCoins(prev => [...prev, coinType]);
+
+      // Auto-equip the new coin to all slots
+      setSlots(prev => prev.map(slot => ({
+        ...slot,
+        coin: coinType
+      })));
+
       createConfetti();
       playSound(880, 0.3, true);
     }
