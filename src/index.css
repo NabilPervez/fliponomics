@@ -241,6 +241,23 @@ body::before {
     inset 0 -2px 5px rgba(0, 0, 0, 0.3);
 }
 
+.coin-button::after {
+  content: 'T';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4a4a4a 0%, #2a2a2a 50%, #4a4a4a 100%);
+  color: #888;
+  font-size: 1.5rem;
+  font-weight: 900;
+  transform: rotateY(180deg);
+  backface-visibility: hidden;
+}
+
 .coin-button:hover {
   transform: scale(1.05);
   filter: brightness(1.1);
@@ -285,8 +302,16 @@ body::before {
   background: linear-gradient(135deg, #FAFAFA 0%, #D0D0D0 50%, #FAFAFA 100%);
 }
 
+.coin-halfDollar {
+  background: linear-gradient(135deg, #E0E0E0 0%, #B0B0B0 50%, #E0E0E0 100%);
+}
+
 .coin-loonie {
   background: linear-gradient(135deg, #FFE5B4 0%, #DAA520 50%, #FFE5B4 100%);
+}
+
+.coin-toonie {
+  background: linear-gradient(135deg, #FFD700 0%, #C0C0C0 50%, #FFD700 100%);
 }
 
 .coin-chip {
@@ -294,12 +319,78 @@ body::before {
   color: white;
 }
 
+.coin-tenDollar {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FFD700 100%);
+}
+
+.coin-pound {
+  background: linear-gradient(135deg, #D4AF37 0%, #AA8C2E 50%, #D4AF37 100%);
+}
+
+.coin-euro {
+  background: linear-gradient(135deg, #C0C0C0 0%, #A8A8A8 50%, #C0C0C0 100%);
+}
+
+.coin-yen {
+  background: linear-gradient(135deg, #E8E8E8 0%, #C0C0C0 50%, #E8E8E8 100%);
+}
+
+.coin-yuan {
+  background: linear-gradient(135deg, #FFD700 0%, #DAA520 50%, #FFD700 100%);
+}
+
+.coin-rupee {
+  background: linear-gradient(135deg, #F4A460 0%, #CD853F 50%, #F4A460 100%);
+}
+
 .coin-doubloon {
   background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FFD700 100%);
 }
 
+.coin-krugerrand {
+  background: linear-gradient(135deg, #FFD700 0%, #FF8C00 50%, #FFD700 100%);
+}
+
+.coin-goldBar {
+  background: linear-gradient(135deg, #FFD700 0%, #B8860B 50%, #FFD700 100%);
+}
+
 .coin-bitcoin {
   background: linear-gradient(135deg, #F7931A 0%, #FF6B35 50%, #F7931A 100%);
+}
+
+.coin-ethereum {
+  background: linear-gradient(135deg, #627EEA 0%, #4B5FA8 50%, #627EEA 100%);
+  color: white;
+}
+
+.coin-platinumCoin {
+  background: linear-gradient(135deg, #E5E4E2 0%, #BCC6CC 50%, #E5E4E2 100%);
+}
+
+.coin-nft {
+  background: linear-gradient(135deg, #FF00FF 0%, #00FFFF 50%, #FF00FF 100%);
+  color: white;
+}
+
+.coin-moonRock {
+  background: linear-gradient(135deg, #D3D3D3 0%, #808080 50%, #D3D3D3 100%);
+}
+
+.coin-antimatter {
+  background: linear-gradient(135deg, #4B0082 0%, #8B00FF 50%, #4B0082 100%);
+  color: white;
+}
+
+.coin-starFragment {
+  background: linear-gradient(135deg, #FFD700 0%, #FF4500 50%, #FFD700 100%);
+  color: white;
+}
+
+.coin-singularity {
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+  color: #FFD700;
+  border: 2px solid #FFD700;
 }
 
 .coin-label {

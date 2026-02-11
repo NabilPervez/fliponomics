@@ -78,7 +78,7 @@ function App() {
   const [ownedUpgrades, setOwnedUpgrades] = useState(() => loadState('ownedUpgrades', []));
   const [activeTab, setActiveTab] = useState('coins');
   const [cps, setCps] = useState(0);
-  const [stats, setStats] = useState(() => loadState('stats', { totalFlips: 0, totalEarned: 0, successfulFlips: 0, totalAttempts: 0 }));
+  const [stats, setStats] = useState(() => loadState('stats', { totalFlips: 0, totalEarned: 0, successfulFlips: 0, totalAttempts: 0, criticalHits: 0 }));
   const [selectedCoinForSlot, setSelectedCoinForSlot] = useState(null);
   const [achievements, setAchievements] = useState(() => loadState('achievements', []));
   const [notifications, setNotifications] = useState([]);
@@ -286,7 +286,8 @@ function App() {
         totalFlips: prev.totalFlips + 1,
         totalEarned: prev.totalEarned + earnedValue,
         successfulFlips: isHeads ? prev.successfulFlips + 1 : prev.successfulFlips,
-        totalAttempts: prev.totalAttempts + 1
+        totalAttempts: prev.totalAttempts + 1,
+        criticalHits: isCritical ? (prev.criticalHits || 0) + 1 : (prev.criticalHits || 0)
       }));
 
       // Show floating number
@@ -368,25 +369,25 @@ function App() {
     const intervals = [];
 
     ownedTools.forEach(toolId => {
-      const tool = TOOLS.find(t => t.id === toolId);
+      const tool = TOOLS[toolId];
       if (!tool) return;
 
       const interval = setInterval(() => {
-        if (tool.target === 'all') {
+        if (tool.type === 'all') {
           // Flip all coins
           slots.forEach((_, index) => {
             setTimeout(() => flipCoin(index), index * 50);
           });
-        } else if (tool.target === 'slot0') {
-          // Flip only slot 0
-          if (slots[0]) flipCoin(0);
-        } else if (tool.target === 'random') {
+        } else if (tool.type === 'targeted') {
+          // Flip specific slot
+          if (slots[tool.target]) flipCoin(tool.target);
+        } else if (tool.type === 'random') {
           // Flip random coin
           const randomIndex = Math.floor(Math.random() * slots.length);
           flipCoin(randomIndex);
-        } else if (tool.target === 'row1') {
-          // Flip first row (up to 4 coins)
-          const rowSize = Math.min(4, slots.length);
+        } else if (tool.type === 'row') {
+          // Flip first N slots
+          const rowSize = Math.min(tool.rowSize || 4, slots.length);
           for (let i = 0; i < rowSize; i++) {
             setTimeout(() => flipCoin(i), i * 50);
           }
@@ -416,20 +417,20 @@ function App() {
     totalCps += baseValue * baseFlipsPerSecond;
 
     ownedTools.forEach(toolId => {
-      const tool = TOOLS.find(t => t.id === toolId);
+      const tool = TOOLS[toolId];
       if (!tool) return;
 
       const flipsPerSecond = 1000 / tool.interval;
       let coinsFlipped = 0;
 
-      if (tool.target === 'all') {
+      if (tool.type === 'all') {
         coinsFlipped = slots.length;
-      } else if (tool.target === 'slot0') {
-        coinsFlipped = slots[0] ? 1 : 0;
-      } else if (tool.target === 'random') {
+      } else if (tool.type === 'targeted') {
+        coinsFlipped = slots[tool.target] ? 1 : 0;
+      } else if (tool.type === 'random') {
         coinsFlipped = 1;
-      } else if (tool.target === 'row1') {
-        coinsFlipped = Math.min(4, slots.length);
+      } else if (tool.type === 'row') {
+        coinsFlipped = Math.min(tool.rowSize || 4, slots.length);
       }
 
       const avgValue = slots.reduce((sum, slot) => {
@@ -469,13 +470,15 @@ function App() {
     setBank(prev => prev - space.cost);
     setOwnedSpaces(prev => [...prev, spaceId]);
 
-    // Add new slots
+    // Add new slots with current coin type (or last unlocked coin)
     const currentSlots = slots.length;
     const newSlotCount = space.slots - currentSlots;
     if (newSlotCount > 0) {
+      // Use the coin from the first slot, or the last unlocked coin
+      const defaultCoin = slots[0]?.coin || unlockedCoins[unlockedCoins.length - 1] || 'penny';
       const newSlots = Array.from({ length: newSlotCount }, (_, i) => ({
         id: currentSlots + i + 1,
-        coin: 'penny',
+        coin: defaultCoin,
         flipping: false
       }));
       setSlots(prev => [...prev, ...newSlots]);
@@ -589,6 +592,14 @@ function App() {
               <div className="stat-label">Total Flips</div>
               <div className="stat-value">{stats.totalFlips.toLocaleString()}</div>
             </div>
+            <div className="stat">
+              <div className="stat-label">Crit Chance</div>
+              <div className="stat-value">{((1 + getCriticalBonus()) * 100).toFixed(1)}%</div>
+            </div>
+            <div className="stat">
+              <div className="stat-label">Crit Hits</div>
+              <div className="stat-value">{(stats.criticalHits || 0).toLocaleString()}</div>
+            </div>
           </div>
           <div style={{ width: '1px' }}></div>
         </div>
@@ -627,9 +638,9 @@ function App() {
                         onClick={() => handleSlotClick(index)}
                         disabled={slot.flipping && !selectedCoinForSlot}
                       >
-                        {COINS[slot.coin].symbol}
+                        H
                       </button>
-                      <div className="coin-label">{COINS[slot.coin].name}</div>
+                      <div className="coin-label">{COINS[slot.coin].name} - {formatCurrency(COINS[slot.coin].value)}</div>
                     </>
                   ) : isLocked ? (
                     <>
@@ -707,7 +718,7 @@ function App() {
                   }}
                 >
                   <div className="item-header">
-                    <div className="item-name">{coin.name}</div>
+                    <div className="item-name">{coin.name} - {formatCurrency(coin.value)}</div>
                     {!isOwned && coin.cost > 0 && (
                       <div className={`item-cost ${canAfford ? 'affordable' : 'unaffordable'}`}>
                         {formatCurrency(coin.cost)}
@@ -715,8 +726,7 @@ function App() {
                     )}
                   </div>
                   <div className="item-description">
-                    Value: {formatCurrency(coin.value)} per flip
-                    {coin.flavor && <><br /><em style={{ opacity: 0.7, fontSize: '0.8rem' }}>{coin.flavor}</em></>}
+                    {coin.description}
                   </div>
                   {isOwned && !isSelected && <div className="item-owned-badge">CLICK TO SELECT</div>}
                   {isSelected && <div className="item-owned-badge" style={{ background: 'rgba(0, 255, 136, 0.2)', color: '#00FF88', borderColor: '#00FF88' }}>SELECTED ✓</div>}
