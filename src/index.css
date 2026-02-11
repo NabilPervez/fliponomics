@@ -1142,3 +1142,43 @@ body::before {
     font-size: 0.6rem;
   }
 }
+
+/* MOBILE FLIP BUTTON */
+.mobile-flip-btn {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  left: 20px;
+  width: calc(100% - 40px);
+  z-index: 2000;
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  border: 4px solid #fff;
+  border-radius: 50px;
+  padding: 1rem;
+  color: #000;
+  font-family: 'Righteous', cursive;
+  font-size: 1.5rem;
+  box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 900;
+  animation: pulse 2s infinite;
+  text-shadow: 0 2px 0 rgba(255, 255, 255, 0.4);
+}
+
+.mobile-flip-btn:active {
+  transform: scale(0.95);
+}
+
+@media (max-width: 768px) {
+  .mobile-flip-btn {
+    display: block;
+  }
+
+  /* Make room for the button */
+  .shop {
+    padding-bottom: 6rem;
+  }
+}

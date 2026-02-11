@@ -67,7 +67,11 @@ function App() {
   };
 
   const [bank, setBank] = useState(() => loadState('bank', 0));
-  const [slots, setSlots] = useState(() => loadState('slots', [{ id: 1, coin: 'penny', flipping: false }]));
+  const [slots, setSlots] = useState(() => {
+    const saved = loadState('slots', [{ id: 1, coin: 'penny', flipping: false }]);
+    // Reset flipping state on load to prevent stuck coins
+    return Array.isArray(saved) ? saved.map(s => ({ ...s, flipping: false })) : saved;
+  });
   const [unlockedCoins, setUnlockedCoins] = useState(() => loadState('unlockedCoins', ['penny']));
   const [ownedSpaces, setOwnedSpaces] = useState(() => loadState('ownedSpaces', []));
   const [ownedTools, setOwnedTools] = useState(() => loadState('ownedTools', []));
@@ -337,22 +341,27 @@ function App() {
     return () => clearInterval(autoFlip);
   }, [slots, flipCoin, getSpeedBonus]);
 
+  // FLIP ALL COINS HELPER
+  const flipAllCoins = useCallback(() => {
+    slots.forEach((slot, index) => {
+      if (!slot.flipping && slot.coin) {
+        setTimeout(() => flipCoin(index), index * 50);
+      }
+    });
+  }, [slots, flipCoin]);
+
   // SPACEBAR TO FLIP ALL COINS
   useEffect(() => {
     const handleKeyPress = (e) => {
       if (e.code === 'Space' && !e.repeat) {
         e.preventDefault();
-        slots.forEach((slot, index) => {
-          if (!slot.flipping) {
-            setTimeout(() => flipCoin(index), index * 50);
-          }
-        });
+        flipAllCoins();
       }
     };
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [slots, flipCoin]);
+  }, [flipAllCoins]);
 
   // Auto-flippers
   useEffect(() => {
@@ -822,6 +831,11 @@ function App() {
         <div className="hotkey-hint">
           Press <kbd>SPACE</kbd> to flip all coins
         </div>
+
+        {/* Mobile Flip Button */}
+        <button className="mobile-flip-btn" onClick={flipAllCoins}>
+          FLIP ALL COINS
+        </button>
       </main>
     </div>
   );
