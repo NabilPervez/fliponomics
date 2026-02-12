@@ -46,7 +46,7 @@ export default function Layout() {
                     </div>
 
                     {/* Prestige Button (Visible when eligible) */}
-                    {bank >= 1000000000 && (
+                    {bank >= 100000000 && (
                         <button
                             onClick={prestige}
                             className="ml-4 px-3 py-1 bg-yellow-500 hover:bg-yellow-400 text-black font-bold uppercase text-xs rounded shadow-[0_0_15px_rgba(234,179,8,0.6)] animate-pulse transition-transform active:scale-95"

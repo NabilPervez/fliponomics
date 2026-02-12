@@ -141,7 +141,8 @@ export const useStore = create(
             prestige: () => {
                 const state = get();
                 // Call of Duty Style: Reset everything, gain a star.
-                if (state.bank < 1000000000) return false;
+                // Requirement: 100 Million Bank
+                if (state.bank < 100000000) return false;
 
                 // Reset
                 set({
