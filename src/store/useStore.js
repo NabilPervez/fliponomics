@@ -11,9 +11,10 @@ export const useStore = create(
     persist(
         (set, get) => ({
             // --- Slices ---
+            // --- Slices ---
             bank: 0,
             lifetimeEarnings: 0,
-            mintTokens: 0, // Prestige Currency
+            prestigeStars: 0, // Prestige Currency
 
             // Inventory
             unlockedCoins: ['penny'],
@@ -139,23 +140,20 @@ export const useStore = create(
             // 6. Prestige
             prestige: () => {
                 const state = get();
-                // Calculate Tokens: Cube root of (Lifetime Cash / 1,000,000)
-                if (state.lifetimeEarnings < 1000000) return false;
-
-                const tokensEarned = Math.floor(Math.cbrt(state.lifetimeEarnings / 1000000));
+                // Call of Duty Style: Reset everything, gain a star.
+                if (state.bank < 1000000000) return false;
 
                 // Reset
                 set({
                     bank: 0,
                     lifetimeEarnings: 0,
-                    mintTokens: state.mintTokens + tokensEarned,
+                    prestigeStars: state.prestigeStars + 1,
 
                     unlockedCoins: ['penny'],
                     maxSlots: 1,
                     slots: [{ id: 1, coinType: 'penny', isFlipping: false }],
 
                     tools: Object.keys(TOOLS).reduce((acc, key) => ({ ...acc, [key]: 0 }), {}),
-                    // Optionally keep upgrades if "Keep Inventory" prestige upgrade exists (Phase 3)
                     upgrades: Object.keys(UPGRADES).reduce((acc, key) => ({ ...acc, [key]: false }), {}),
                 });
                 return true;

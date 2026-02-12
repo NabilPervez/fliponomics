@@ -3,7 +3,7 @@ import CoinMat from '../Mat/CoinMat';
 import StorePanel from '../Store/StorePanel';
 
 export default function Layout() {
-    const { bank } = useStore();
+    const { bank, prestige, prestigeStars } = useStore();
 
     // Format currency
     const formattedBank = new Intl.NumberFormat('en-US', {
@@ -22,7 +22,6 @@ export default function Layout() {
                     </div>
                     <div>
                         <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white leading-none">Flip-O-Nomics</h1>
-                        <span className="text-[10px] uppercase tracking-widest text-primary font-bold">Infinite Mint v1.0</span>
                     </div>
                 </div>
 
@@ -35,17 +34,26 @@ export default function Layout() {
                         </div>
                     </div>
                     <div className="h-10 w-px bg-white/10"></div>
+                    <div className="h-10 w-px bg-white/10"></div>
+
+                    {/* Prestige & Stars */}
                     <div className="flex flex-col items-end">
-                        <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400">Efficiency</span>
-                        <div className="flex items-center gap-2">
-                            <span className="text-2xl font-bold text-white">0.00 <span className="text-sm font-medium text-slate-400">CPS</span></span>
+                        <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400">Prestige</span>
+                        <div className="flex items-center gap-1 text-yellow-400">
+                            <span className="material-symbols-outlined text-lg">hotel_class</span>
+                            <span className="text-xl font-bold">{prestigeStars}</span>
                         </div>
                     </div>
 
-                    <div className="size-10 rounded-full bg-gradient-to-br from-primary to-emerald-700 border-2 border-white/20 overflow-hidden ml-4">
-                        {/* Avatar Placeholder */}
-                        <div className="w-full h-full bg-black/20 flex items-center justify-center text-white/50 text-xs">U</div>
-                    </div>
+                    {/* Prestige Button (Visible when eligible) */}
+                    {bank >= 1000000000 && (
+                        <button
+                            onClick={prestige}
+                            className="ml-4 px-3 py-1 bg-yellow-500 hover:bg-yellow-400 text-black font-bold uppercase text-xs rounded shadow-[0_0_15px_rgba(234,179,8,0.6)] animate-pulse transition-transform active:scale-95"
+                        >
+                            PRESTIGE
+                        </button>
+                    )}
                 </div>
             </header>
 
