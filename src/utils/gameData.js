@@ -7,6 +7,13 @@ export const COINS = {
         cost: 0,
         description: "Find a penny, pick it up."
     },
+    yen: {
+        id: 'yen',
+        name: 'Japanese Yen',
+        value: 0.02,
+        cost: 3.50,
+        description: "Small value, big culture. Helps bridge the gap."
+    },
     nickel: {
         id: 'nickel',
         name: 'Nickel',
@@ -14,165 +21,158 @@ export const COINS = {
         cost: 5.00,
         description: "Five times the copper. Sort of."
     },
+    rupee: {
+        id: 'rupee',
+        name: 'Indian Rupee',
+        value: 0.07,
+        cost: 8.50,
+        description: "Spice trade profits."
+    },
+    yuan: {
+        id: 'yuan',
+        name: 'Chinese Yuan',
+        value: 0.09,
+        cost: 13.50,
+        description: "The dragon's treasure."
+    },
     dime: {
         id: 'dime',
         name: 'Dime',
         value: 0.10,
-        cost: 25.00,
+        cost: 20.00,
         description: "Smaller, yet more valuable. Economics is weird."
     },
     quarter: {
         id: 'quarter',
         name: 'Quarter',
         value: 0.25,
-        cost: 100.00,
+        cost: 45.00,
         description: "The laundry machine standard."
     },
     halfDollar: {
         id: 'halfDollar',
         name: 'Half Dollar',
         value: 0.50,
-        cost: 250.00,
+        cost: 85.00,
         description: "Rare in the wild, common in your pocket."
     },
     loonie: {
         id: 'loonie',
         name: 'Loonie',
         value: 1.00,
-        cost: 500.00,
+        cost: 200.00,
         description: "A golden bird from the north."
+    },
+    euro: {
+        id: 'euro',
+        name: 'Euro',
+        value: 1.08,
+        cost: 250.00,
+        description: "United in currency, divided by borders."
+    },
+    pound: {
+        id: 'pound',
+        name: 'British Pound',
+        value: 1.27,
+        cost: 350.00,
+        description: "The Queen's currency. God save the flip."
     },
     toonie: {
         id: 'toonie',
         name: 'Toonie',
         value: 2.00,
-        cost: 1000.00,
+        cost: 500.00,
         description: "Two-tone Canadian excellence."
     },
     chip: {
         id: 'chip',
         name: 'Casino Chip',
         value: 5.00,
-        cost: 2500.00,
+        cost: 1500.00,
         description: "The house always wins. Now you are the house."
     },
     tenDollar: {
         id: 'tenDollar',
         name: 'Ten Dollar Coin',
         value: 10.00,
-        cost: 5000.00,
+        cost: 3500.00,
         description: "Commemorative and collectible."
-    },
-    pound: {
-        id: 'pound',
-        name: 'British Pound',
-        value: 1.27,
-        cost: 750.00,
-        description: "The Queen's currency. God save the flip."
-    },
-    euro: {
-        id: 'euro',
-        name: 'Euro',
-        value: 1.08,
-        cost: 650.00,
-        description: "United in currency, divided by borders."
-    },
-    yen: {
-        id: 'yen',
-        name: 'Japanese Yen',
-        value: 0.0067,
-        cost: 50.00,
-        description: "Small value, big culture."
-    },
-    yuan: {
-        id: 'yuan',
-        name: 'Chinese Yuan',
-        value: 0.14,
-        cost: 150.00,
-        description: "The dragon's treasure."
-    },
-    rupee: {
-        id: 'rupee',
-        name: 'Indian Rupee',
-        value: 0.012,
-        cost: 75.00,
-        description: "Spice trade profits."
     },
     doubloon: {
         id: 'doubloon',
         name: 'Gold Doubloon',
         value: 50.00,
-        cost: 25000.00,
+        cost: 15000.00,
         description: "Yarr! Genuine pirate treasure."
     },
     krugerrand: {
         id: 'krugerrand',
         name: 'Krugerrand',
         value: 100.00,
-        cost: 50000.00,
+        cost: 35000.00,
         description: "South African gold standard."
     },
     goldBar: {
         id: 'goldBar',
         name: 'Gold Bar',
         value: 500.00,
-        cost: 250000.00,
+        cost: 150000.00,
         description: "Fort Knox approved."
     },
     bitcoin: {
         id: 'bitcoin',
         name: 'Bitcoin',
         value: 35000.00,
-        cost: 10000000.00,
+        cost: 5000000.00,
         description: "Volatile, but digital."
     },
     ethereum: {
         id: 'ethereum',
         name: 'Ethereum',
         value: 2500.00,
-        cost: 750000.00,
+        cost: 350000.00,
         description: "Smart contracts, smarter flips."
     },
     platinumCoin: {
         id: 'platinumCoin',
         name: 'Platinum Coin',
         value: 75000.00,
-        cost: 25000000.00,
+        cost: 15000000.00,
         description: "Rarer than gold, shinier than silver."
     },
     nft: {
         id: 'nft',
         name: 'Rare NFT',
         value: 150000.00,
-        cost: 50000000.00,
+        cost: 35000000.00,
         description: "Right-click save this flip."
     },
     moonRock: {
         id: 'moonRock',
         name: 'Moon Rock',
         value: 500000.00,
-        cost: 250000000.00,
+        cost: 150000000.00,
         description: "Literally out of this world."
     },
     antimatter: {
         id: 'antimatter',
         name: 'Antimatter Coin',
         value: 5000000.00,
-        cost: 2500000000.00,
+        cost: 1500000000.00,
         description: "Don't let it touch regular matter."
     },
     starFragment: {
         id: 'starFragment',
         name: 'Star Fragment',
         value: 50000000.00,
-        cost: 25000000000.00,
+        cost: 15000000000.00,
         description: "Forged in the heart of a dying star."
     },
     singularity: {
         id: 'singularity',
         name: 'Singularity Token',
         value: 1000000000.00,
-        cost: 500000000000.00,
+        cost: 250000000000.00,
         description: "The event horizon of wealth."
     }
 };

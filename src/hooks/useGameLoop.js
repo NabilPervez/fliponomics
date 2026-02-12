@@ -96,10 +96,8 @@ function triggerToolAction(tool, slots, actions) {
         targetSlots.push(slots[randomIndex]);
     }
     else if (tool.type === 'row') {
-        // Mock row logic: First 4 slots?
-        const rowSize = 2; // 2x2 grid start
-        // For 'rows', let's just grab first 2 for now
-        targetSlots = slots.slice(0, 2);
+        const rowSize = tool.rowSize || 4;
+        targetSlots = slots.slice(0, rowSize);
     }
     else if (tool.type === 'all') {
         targetSlots = slots;
